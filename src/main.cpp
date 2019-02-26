@@ -8,7 +8,7 @@
 #include <sharedutils/util_string.h>
 
 #pragma comment(lib,"vfilesystem.lib")
-#pragma comment(lib,"util.lib")
+#pragma comment(lib,"sharedutils.lib")
 #pragma comment(lib,"mathutil.lib")
 
 static se::ResultCode read_until(VFilePtr &f,const std::string &str,std::string &readString,bool bExclude=false)
