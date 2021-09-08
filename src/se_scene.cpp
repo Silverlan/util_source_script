@@ -157,7 +157,7 @@ util::MarkupFile::ResultCode se::read_wav_phonemes(VFilePtr &wavFile,SoundPhonem
 	if(sv.subValues.empty() == true)
 		return util::MarkupFile::ResultCode::NoPhonemeData;
 	auto itPlainText = std::find_if(sv.subValues.begin(),sv.subValues.end(),[](const std::shared_ptr<se::SceneScriptValue> &sv) {
-		return ustring::compare(sv->identifier,"PLAINTEXT",false);
+		return ustring::compare<std::string>(sv->identifier,"PLAINTEXT",false);
 	});
 	if(itPlainText == sv.subValues.end() || (*itPlainText)->subValues.empty() == true)
 		return util::MarkupFile::ResultCode::NoPhonemeData;
@@ -168,7 +168,7 @@ util::MarkupFile::ResultCode se::read_wav_phonemes(VFilePtr &wavFile,SoundPhonem
 		phonemeData.plainText += " " +param;
 
 	auto itWords = std::find_if(sv.subValues.begin(),sv.subValues.end(),[](const std::shared_ptr<se::SceneScriptValue> &sv) {
-		return ustring::compare(sv->identifier,"WORDS",false);
+		return ustring::compare<std::string>(sv->identifier,"WORDS",false);
 	});
 	if(itWords == sv.subValues.end())
 		return util::MarkupFile::ResultCode::NoPhonemeData;
@@ -176,7 +176,7 @@ util::MarkupFile::ResultCode se::read_wav_phonemes(VFilePtr &wavFile,SoundPhonem
 	phonemeData.words.reserve(wordValues.size());
 	for(auto &wordVal : wordValues)
 	{
-		if(ustring::compare(wordVal->identifier,"WORD",false) == false)
+		if(ustring::compare<std::string>(wordVal->identifier,"WORD",false) == false)
 			continue;
 		phonemeData.words.push_back({});
 		auto &wordData = phonemeData.words.back();
