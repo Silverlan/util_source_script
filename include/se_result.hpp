@@ -7,10 +7,8 @@
 
 #include <cinttypes>
 
-namespace se
-{
-	enum class ResultCode : uint32_t
-	{
+namespace se {
+	enum class ResultCode : uint32_t {
 		Ok = 0,
 		Eof,
 		EndOfBlock,

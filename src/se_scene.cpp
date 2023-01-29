@@ -11,35 +11,30 @@
 #include <array>
 #include <sstream>
 
-namespace se
-{
-	util::MarkupFile::ResultCode read_scene(util::MarkupFile &mf,se::SceneScriptValue &root);
+namespace se {
+	util::MarkupFile::ResultCode read_scene(util::MarkupFile &mf, se::SceneScriptValue &root);
 };
 
-static util::MarkupFile::ResultCode read_block(util::MarkupFile &mf,se::SceneScriptValue &block,bool bRoot=false)
+static util::MarkupFile::ResultCode read_block(util::MarkupFile &mf, se::SceneScriptValue &block, bool bRoot = false)
 {
-	auto token = char{};
-	for(;;)
-	{
+	auto token = char {};
+	for(;;) {
 		util::MarkupFile::ResultCode r {};
-		if((r=mf.ReadNextToken(token)) != util::MarkupFile::ResultCode::Ok)
-		{
+		if((r = mf.ReadNextToken(token)) != util::MarkupFile::ResultCode::Ok) {
 			if(bRoot == true)
 				return util::MarkupFile::ResultCode::Ok;
 			return util::MarkupFile::ResultCode::Error; // Missing closing bracket '}'
 		}
-		if(token == '}')
-		{
-			mf.GetDataStream()->SetOffset(mf.GetDataStream()->GetOffset() +1u);
+		if(token == '}') {
+			mf.GetDataStream()->SetOffset(mf.GetDataStream()->GetOffset() + 1u);
 			return util::MarkupFile::ResultCode::EndOfBlock;
 		}
-		auto key = std::string{};
+		auto key = std::string {};
 		auto bComboBlock = false;
-		if(token != '{')
-		{
-			if((r=mf.ReadNextString(key)) != util::MarkupFile::ResultCode::Ok)
+		if(token != '{') {
+			if((r = mf.ReadNextString(key)) != util::MarkupFile::ResultCode::Ok)
 				return (bRoot == true && r == util::MarkupFile::ResultCode::Eof) ? util::MarkupFile::ResultCode::Ok : util::MarkupFile::ResultCode::Error;
-			if((r=mf.ReadNextParameterToken(token)) != util::MarkupFile::ResultCode::Ok)
+			if((r = mf.ReadNextParameterToken(token)) != util::MarkupFile::ResultCode::Ok)
 				return util::MarkupFile::ResultCode::Error;
 		}
 		else
@@ -47,26 +42,22 @@ static util::MarkupFile::ResultCode read_block(util::MarkupFile &mf,se::SceneScr
 		auto kv = std::make_shared<se::SceneScriptValue>();
 		kv->identifier = key;
 		block.subValues.push_back(kv);
-		auto val = std::string{};
-		while((r=mf.ReadNextParameterToken(token)) == util::MarkupFile::ResultCode::Ok)
-		{
-			if(token == '\n' || bComboBlock == true)
-			{
-				if(bComboBlock == false)
-				{
-					if((r=mf.ReadNextToken(token)) != util::MarkupFile::ResultCode::Ok)
+		auto val = std::string {};
+		while((r = mf.ReadNextParameterToken(token)) == util::MarkupFile::ResultCode::Ok) {
+			if(token == '\n' || bComboBlock == true) {
+				if(bComboBlock == false) {
+					if((r = mf.ReadNextToken(token)) != util::MarkupFile::ResultCode::Ok)
 						return util::MarkupFile::ResultCode::Error;
 				}
-				if(token == '{')
-				{
-					mf.GetDataStream()->SetOffset(mf.GetDataStream()->GetOffset() +1u);
-					auto r = read_block(mf,*kv);
+				if(token == '{') {
+					mf.GetDataStream()->SetOffset(mf.GetDataStream()->GetOffset() + 1u);
+					auto r = read_block(mf, *kv);
 					if(r == util::MarkupFile::ResultCode::Error)
 						return util::MarkupFile::ResultCode::Error;
 				}
 				break;
 			}
-			if((r=mf.ReadNextString(val)) != util::MarkupFile::ResultCode::Ok)
+			if((r = mf.ReadNextString(val)) != util::MarkupFile::ResultCode::Ok)
 				return util::MarkupFile::ResultCode::Error;
 			kv->parameters.push_back(val);
 		}
@@ -76,74 +67,71 @@ static util::MarkupFile::ResultCode read_block(util::MarkupFile &mf,se::SceneScr
 	return util::MarkupFile::ResultCode::Ok;
 }
 
-util::MarkupFile::ResultCode se::read_scene(util::MarkupFile &mf,se::SceneScriptValue &block)
+util::MarkupFile::ResultCode se::read_scene(util::MarkupFile &mf, se::SceneScriptValue &block)
 {
-	auto r = util::MarkupFile::ResultCode{};
-	while((r=read_block(mf,block,true)) == util::MarkupFile::ResultCode::EndOfBlock);
+	auto r = util::MarkupFile::ResultCode {};
+	while((r = read_block(mf, block, true)) == util::MarkupFile::ResultCode::EndOfBlock)
+		;
 	return (r == util::MarkupFile::ResultCode::Ok || r == util::MarkupFile::ResultCode::EndOfBlock) ? util::MarkupFile::ResultCode::Ok : util::MarkupFile::ResultCode::Error;
 }
 
-util::MarkupFile::ResultCode se::read_scene(std::shared_ptr<VFilePtrInternal> &file,se::SceneScriptValue &root)
+util::MarkupFile::ResultCode se::read_scene(std::shared_ptr<VFilePtrInternal> &file, se::SceneScriptValue &root)
 {
 	auto str = file->ReadString();
 	DataStream ds {};
 	ds->WriteString(str);
 	ds->SetOffset(0u);
 	util::MarkupFile mf {ds};
-	return read_scene(mf,root);
+	return read_scene(mf, root);
 }
 
-void se::debug_print(std::stringstream &ss,SoundPhonemeData &phonemeData)
+void se::debug_print(std::stringstream &ss, SoundPhonemeData &phonemeData)
 {
-	ss<<phonemeData.plainText<<":\n";
-	for(auto &word : phonemeData.words)
-	{
-		ss<<"\t"<<word.word<<" ("<<word.tStart<<" to "<<word.tEnd<<")\n";
+	ss << phonemeData.plainText << ":\n";
+	for(auto &word : phonemeData.words) {
+		ss << "\t" << word.word << " (" << word.tStart << " to " << word.tEnd << ")\n";
 		for(auto &phoneme : word.phonemes)
-			ss<<"\t\t"<<phoneme.phoneme<<" ("<<phoneme.tStart<<" to "<<phoneme.tEnd<<")\n";
+			ss << "\t\t" << phoneme.phoneme << " (" << phoneme.tStart << " to " << phoneme.tEnd << ")\n";
 	}
 }
-void se::debug_print(std::stringstream &ss,se::SceneScriptValue &val,const std::string &t)
+void se::debug_print(std::stringstream &ss, se::SceneScriptValue &val, const std::string &t)
 {
-	ss<<t<<"\""<<val.identifier<<"\" (";
+	ss << t << "\"" << val.identifier << "\" (";
 	auto bFirst = true;
-	for(auto &param : val.parameters)
-	{
+	for(auto &param : val.parameters) {
 		if(bFirst == false)
-			ss<<", ";
-		ss<<"\""<<param<<"\"";
+			ss << ", ";
+		ss << "\"" << param << "\"";
 		bFirst = false;
 	}
-	ss<<")\n";
+	ss << ")\n";
 	for(auto &subVal : val.subValues)
-		debug_print(ss,*subVal,t +"\t");
+		debug_print(ss, *subVal, t + "\t");
 }
 
-util::MarkupFile::ResultCode se::read_wav_phonemes(VFilePtr &wavFile,SoundPhonemeData &phonemeData)
+util::MarkupFile::ResultCode se::read_wav_phonemes(VFilePtr &wavFile, SoundPhonemeData &phonemeData)
 {
-	auto id = wavFile->Read<std::array<char,4>>();
-	if(ustring::compare(id.data(),"RIFF",false,4u) == false)
+	auto id = wavFile->Read<std::array<char, 4>>();
+	if(ustring::compare(id.data(), "RIFF", false, 4u) == false)
 		return util::MarkupFile::ResultCode::Error;
-	wavFile->Seek(wavFile->Tell() +sizeof(uint32_t));
-	id = wavFile->Read<std::array<char,4>>();
-	if(ustring::compare(id.data(),"WAVE",false,4u) == false)
+	wavFile->Seek(wavFile->Tell() + sizeof(uint32_t));
+	id = wavFile->Read<std::array<char, 4>>();
+	if(ustring::compare(id.data(), "WAVE", false, 4u) == false)
 		return util::MarkupFile::ResultCode::Error;
 	auto bListChunk = false;
 	auto chunkSize = 0u;
-	do
-	{
-		id = wavFile->Read<std::array<char,4>>();
+	do {
+		id = wavFile->Read<std::array<char, 4>>();
 		chunkSize = wavFile->Read<uint32_t>();
 		if(wavFile->Eof())
 			break;
-		wavFile->Seek(wavFile->Tell() +chunkSize);
-	}
-	while((bListChunk = ustring::compare(id.data(),"VDAT",false,4u)) == false);
+		wavFile->Seek(wavFile->Tell() + chunkSize);
+	} while((bListChunk = ustring::compare(id.data(), "VDAT", false, 4u)) == false);
 	if(bListChunk == false)
 		return util::MarkupFile::ResultCode::NoPhonemeData;
-	wavFile->Seek(wavFile->Tell() -chunkSize);
-	auto vdat = std::string(chunkSize +1u,'\0');
-	wavFile->Read(&vdat[0],chunkSize);
+	wavFile->Seek(wavFile->Tell() - chunkSize);
+	auto vdat = std::string(chunkSize + 1u, '\0');
+	wavFile->Read(&vdat[0], chunkSize);
 
 	DataStream ds {};
 	ds->WriteString(vdat);
@@ -151,32 +139,27 @@ util::MarkupFile::ResultCode se::read_wav_phonemes(VFilePtr &wavFile,SoundPhonem
 
 	util::MarkupFile mf {ds};
 	se::SceneScriptValue sv {};
-	auto r = se::read_scene(mf,sv);
+	auto r = se::read_scene(mf, sv);
 	if(r != util::MarkupFile::ResultCode::Ok)
 		return r;
 	if(sv.subValues.empty() == true)
 		return util::MarkupFile::ResultCode::NoPhonemeData;
-	auto itPlainText = std::find_if(sv.subValues.begin(),sv.subValues.end(),[](const std::shared_ptr<se::SceneScriptValue> &sv) {
-		return ustring::compare<std::string>(sv->identifier,"PLAINTEXT",false);
-	});
+	auto itPlainText = std::find_if(sv.subValues.begin(), sv.subValues.end(), [](const std::shared_ptr<se::SceneScriptValue> &sv) { return ustring::compare<std::string>(sv->identifier, "PLAINTEXT", false); });
 	if(itPlainText == sv.subValues.end() || (*itPlainText)->subValues.empty() == true)
 		return util::MarkupFile::ResultCode::NoPhonemeData;
 
 	auto &textVal = (*itPlainText)->subValues.at(0);
 	phonemeData.plainText = textVal->identifier;
 	for(auto &param : textVal->parameters)
-		phonemeData.plainText += " " +param;
+		phonemeData.plainText += " " + param;
 
-	auto itWords = std::find_if(sv.subValues.begin(),sv.subValues.end(),[](const std::shared_ptr<se::SceneScriptValue> &sv) {
-		return ustring::compare<std::string>(sv->identifier,"WORDS",false);
-	});
+	auto itWords = std::find_if(sv.subValues.begin(), sv.subValues.end(), [](const std::shared_ptr<se::SceneScriptValue> &sv) { return ustring::compare<std::string>(sv->identifier, "WORDS", false); });
 	if(itWords == sv.subValues.end())
 		return util::MarkupFile::ResultCode::NoPhonemeData;
 	auto &wordValues = (*itWords)->subValues;
 	phonemeData.words.reserve(wordValues.size());
-	for(auto &wordVal : wordValues)
-	{
-		if(ustring::compare<std::string>(wordVal->identifier,"WORD",false) == false)
+	for(auto &wordVal : wordValues) {
+		if(ustring::compare<std::string>(wordVal->identifier, "WORD", false) == false)
 			continue;
 		phonemeData.words.push_back({});
 		auto &wordData = phonemeData.words.back();
@@ -189,8 +172,7 @@ util::MarkupFile::ResultCode se::read_wav_phonemes(VFilePtr &wavFile,SoundPhonem
 
 		auto &phonemeValues = wordVal->subValues;
 		wordData.phonemes.reserve(phonemeValues.size());
-		for(auto &phonemeValue : phonemeValues)
-		{
+		for(auto &phonemeValue : phonemeValues) {
 			wordData.phonemes.push_back({});
 			auto &phonemeData = wordData.phonemes.back();
 			if(phonemeValue->parameters.size() > 0)

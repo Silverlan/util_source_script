@@ -11,29 +11,23 @@
 #include "se_result.hpp"
 
 class VFilePtrInternal;
-namespace se
-{
-	struct ScriptBase
-	{
+namespace se {
+	struct ScriptBase {
 		std::string identifier {};
-		virtual bool IsBlock() const=0;
+		virtual bool IsBlock() const = 0;
 	};
 
-	struct ScriptValue
-		: public ScriptBase
-	{
+	struct ScriptValue : public ScriptBase {
 		std::string value {};
-		virtual bool IsBlock() const override {return false;}
+		virtual bool IsBlock() const override { return false; }
 	};
 
-	struct ScriptBlock
-		: public ScriptBase
-	{
+	struct ScriptBlock : public ScriptBase {
 		std::vector<std::shared_ptr<ScriptBase>> data {};
-		virtual bool IsBlock() const override {return true;}
+		virtual bool IsBlock() const override { return true; }
 	};
 
-	ResultCode read_script(std::shared_ptr<VFilePtrInternal> &f,se::ScriptBlock &root);
+	ResultCode read_script(std::shared_ptr<VFilePtrInternal> &f, se::ScriptBlock &root);
 };
 
 #endif
