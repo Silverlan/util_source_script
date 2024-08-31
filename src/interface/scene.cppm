@@ -2,16 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef __SE_SCENE_HPP__
-#define __SE_SCENE_HPP__
-
 #include <string>
 #include <vector>
 #include <memory>
 #include <sharedutils/util_markup_file.hpp>
+#include <fsys/filesystem.h>
 
-class VFilePtrInternal;
-namespace se {
+export module se_script.scene;
+
+export namespace se_script
+{
 	struct SceneScriptValue {
 		std::string identifier = {};
 		std::vector<std::string> parameters = {};
@@ -39,10 +39,8 @@ namespace se {
 	};
 
 	util::MarkupFile::ResultCode read_wav_phonemes(std::shared_ptr<VFilePtrInternal> &wavFile, SoundPhonemeData &phonemeData);
-	util::MarkupFile::ResultCode read_scene(std::shared_ptr<VFilePtrInternal> &file, se::SceneScriptValue &root);
+	util::MarkupFile::ResultCode read_scene(std::shared_ptr<VFilePtrInternal> &file, SceneScriptValue &root);
 
 	void debug_print(std::stringstream &ss, SoundPhonemeData &phonemeData);
-	void debug_print(std::stringstream &ss, se::SceneScriptValue &val, const std::string &t = "");
+	void debug_print(std::stringstream &ss, SceneScriptValue &val, const std::string &t = "");
 };
-
-#endif
