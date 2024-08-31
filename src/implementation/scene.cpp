@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+module;
+
 #include <sharedutils/util_markup_file.hpp>
 #include <sharedutils/util.h>
 #include <array>
