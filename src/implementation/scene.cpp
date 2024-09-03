@@ -11,11 +11,11 @@ module;
 
 module se_script.scene;
 
-namespace se_script {
+namespace source_engine::script {
 	util::MarkupFile::ResultCode read_scene(util::MarkupFile &mf, SceneScriptValue &root);
 };
 
-static util::MarkupFile::ResultCode read_block(util::MarkupFile &mf, se_script::SceneScriptValue &block, bool bRoot = false)
+static util::MarkupFile::ResultCode read_block(util::MarkupFile &mf, source_engine::script::SceneScriptValue &block, bool bRoot = false)
 {
 	auto token = char {};
 	for(;;) {
@@ -39,7 +39,7 @@ static util::MarkupFile::ResultCode read_block(util::MarkupFile &mf, se_script::
 		}
 		else
 			bComboBlock = true;
-		auto kv = std::make_shared<se_script::SceneScriptValue>();
+		auto kv = std::make_shared<source_engine::script::SceneScriptValue>();
 		kv->identifier = key;
 		block.subValues.push_back(kv);
 		auto val = std::string {};
@@ -67,7 +67,7 @@ static util::MarkupFile::ResultCode read_block(util::MarkupFile &mf, se_script::
 	return util::MarkupFile::ResultCode::Ok;
 }
 
-util::MarkupFile::ResultCode se_script::read_scene(util::MarkupFile &mf, se_script::SceneScriptValue &block)
+util::MarkupFile::ResultCode source_engine::script::read_scene(util::MarkupFile &mf, source_engine::script::SceneScriptValue &block)
 {
 	auto r = util::MarkupFile::ResultCode {};
 	while((r = read_block(mf, block, true)) == util::MarkupFile::ResultCode::EndOfBlock)
@@ -75,7 +75,7 @@ util::MarkupFile::ResultCode se_script::read_scene(util::MarkupFile &mf, se_scri
 	return (r == util::MarkupFile::ResultCode::Ok || r == util::MarkupFile::ResultCode::EndOfBlock) ? util::MarkupFile::ResultCode::Ok : util::MarkupFile::ResultCode::Error;
 }
 
-util::MarkupFile::ResultCode se_script::read_scene(std::shared_ptr<VFilePtrInternal> &file, se_script::SceneScriptValue &root)
+util::MarkupFile::ResultCode source_engine::script::read_scene(std::shared_ptr<VFilePtrInternal> &file, source_engine::script::SceneScriptValue &root)
 {
 	auto str = file->ReadString();
 	DataStream ds {};
@@ -85,7 +85,7 @@ util::MarkupFile::ResultCode se_script::read_scene(std::shared_ptr<VFilePtrInter
 	return read_scene(mf, root);
 }
 
-void se_script::debug_print(std::stringstream &ss, SoundPhonemeData &phonemeData)
+void source_engine::script::debug_print(std::stringstream &ss, SoundPhonemeData &phonemeData)
 {
 	ss << phonemeData.plainText << ":\n";
 	for(auto &word : phonemeData.words) {
@@ -94,7 +94,7 @@ void se_script::debug_print(std::stringstream &ss, SoundPhonemeData &phonemeData
 			ss << "\t\t" << phoneme.phoneme << " (" << phoneme.tStart << " to " << phoneme.tEnd << ")\n";
 	}
 }
-void se_script::debug_print(std::stringstream &ss, se_script::SceneScriptValue &val, const std::string &t)
+void source_engine::script::debug_print(std::stringstream &ss, source_engine::script::SceneScriptValue &val, const std::string &t)
 {
 	ss << t << "\"" << val.identifier << "\" (";
 	auto bFirst = true;
@@ -109,7 +109,7 @@ void se_script::debug_print(std::stringstream &ss, se_script::SceneScriptValue &
 		debug_print(ss, *subVal, t + "\t");
 }
 
-util::MarkupFile::ResultCode se_script::read_wav_phonemes(std::shared_ptr<VFilePtrInternal> &wavFile, SoundPhonemeData &phonemeData)
+util::MarkupFile::ResultCode source_engine::script::read_wav_phonemes(std::shared_ptr<VFilePtrInternal> &wavFile, SoundPhonemeData &phonemeData)
 {
 	auto id = wavFile->Read<std::array<char, 4>>();
 	if(ustring::compare(id.data(), "RIFF", false, 4u) == false)
@@ -138,13 +138,13 @@ util::MarkupFile::ResultCode se_script::read_wav_phonemes(std::shared_ptr<VFileP
 	ds->SetOffset(0u);
 
 	util::MarkupFile mf {ds};
-	se_script::SceneScriptValue sv {};
-	auto r = se_script::read_scene(mf, sv);
+	source_engine::script::SceneScriptValue sv {};
+	auto r = source_engine::script::read_scene(mf, sv);
 	if(r != util::MarkupFile::ResultCode::Ok)
 		return r;
 	if(sv.subValues.empty() == true)
 		return util::MarkupFile::ResultCode::NoPhonemeData;
-	auto itPlainText = std::find_if(sv.subValues.begin(), sv.subValues.end(), [](const std::shared_ptr<se_script::SceneScriptValue> &sv) { return ustring::compare<std::string>(sv->identifier, "PLAINTEXT", false); });
+	auto itPlainText = std::find_if(sv.subValues.begin(), sv.subValues.end(), [](const std::shared_ptr<source_engine::script::SceneScriptValue> &sv) { return ustring::compare<std::string>(sv->identifier, "PLAINTEXT", false); });
 	if(itPlainText == sv.subValues.end() || (*itPlainText)->subValues.empty() == true)
 		return util::MarkupFile::ResultCode::NoPhonemeData;
 
@@ -153,7 +153,7 @@ util::MarkupFile::ResultCode se_script::read_wav_phonemes(std::shared_ptr<VFileP
 	for(auto &param : textVal->parameters)
 		phonemeData.plainText += " " + param;
 
-	auto itWords = std::find_if(sv.subValues.begin(), sv.subValues.end(), [](const std::shared_ptr<se_script::SceneScriptValue> &sv) { return ustring::compare<std::string>(sv->identifier, "WORDS", false); });
+	auto itWords = std::find_if(sv.subValues.begin(), sv.subValues.end(), [](const std::shared_ptr<source_engine::script::SceneScriptValue> &sv) { return ustring::compare<std::string>(sv->identifier, "WORDS", false); });
 	if(itWords == sv.subValues.end())
 		return util::MarkupFile::ResultCode::NoPhonemeData;
 	auto &wordValues = (*itWords)->subValues;
@@ -189,12 +189,12 @@ util::MarkupFile::ResultCode se_script::read_wav_phonemes(std::shared_ptr<VFileP
 #include <iostream>
 int main(int argc,char *argv[])
 {
-	/*se_script::SoundPhonemeData phonemeData {};
+	/*source_engine::script::SoundPhonemeData phonemeData {};
 	VFilePtr f = FileManager::OpenSystemFile("C:\\Users\\Florian\\Documents\\Projects\\weave\\x64\\Release\\sounds\\al_hazmat.wav","rb");
-	if(se_script::read_wav_phonemes(f,phonemeData) == se_script::ResultCode::Ok)
+	if(source_engine::script::read_wav_phonemes(f,phonemeData) == source_engine::script::ResultCode::Ok)
 	{
 		std::stringstream ss {};
-		se_script::debug_print(ss,phonemeData);
+		source_engine::script::debug_print(ss,phonemeData);
 		std::cout<<ss.str()<<std::endl;
 	}*/
 	VFilePtr f = FileManager::OpenSystemFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Half-Life 2\\hl2\\scenes\\choreoexamples\\sdk_barney1.vcd","rb");
@@ -203,12 +203,12 @@ int main(int argc,char *argv[])
 	DataStream ds {};
 	ds->WriteString(str);
 	ds->SetOffset(0u);
-	se_script::SceneScriptValue sv {};
-	auto r = se_script::read_script(ds,sv);
-	if(r == se_script::ResultCode::Ok)
+	source_engine::script::SceneScriptValue sv {};
+	auto r = source_engine::script::read_script(ds,sv);
+	if(r == source_engine::script::ResultCode::Ok)
 	{
 		std::stringstream ss;
-		se_script::debug_print(ss,sv);
+		source_engine::script::debug_print(ss,sv);
 		std::cout<<"Data:\n"<<ss.str()<<std::endl;
 	}
 	for(;;);

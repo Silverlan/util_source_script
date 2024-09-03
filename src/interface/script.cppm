@@ -13,8 +13,7 @@ export module se_script.script;
 
 import se_script.enums;
 
-export namespace se_script
-{
+export namespace source_engine::script {
 	struct ScriptBase {
 		std::string identifier {};
 		virtual bool IsBlock() const = 0;

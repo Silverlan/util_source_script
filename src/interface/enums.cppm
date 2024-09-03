@@ -8,7 +8,7 @@ module;
 
 export module se_script.enums;
 
-export namespace se_script
+export namespace source_engine::script
 {
 	enum class ResultCode : uint32_t {
 		Ok = 0,

@@ -12,8 +12,7 @@ module;
 
 export module se_script.scene;
 
-export namespace se_script
-{
+export namespace source_engine::script {
 	struct SceneScriptValue {
 		std::string identifier = {};
 		std::vector<std::string> parameters = {};
