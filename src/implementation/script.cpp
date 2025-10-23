@@ -3,10 +3,9 @@
 
 module;
 
-#include <sharedutils/util_markup_file.hpp>
-#include <sharedutils/util.h>
-#include <fsys/filesystem.h>
 #include <array>
+#include <string>
+#include <memory>
 
 module se_script.script;
 

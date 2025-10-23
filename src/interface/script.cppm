@@ -6,11 +6,11 @@ module;
 #include <string>
 #include <vector>
 #include <memory>
-#include <fsys/filesystem.h>
 
 export module se_script.script;
 
 import se_script.enums;
+export import pragma.filesystem;
 
 export namespace source_engine::script {
 	struct ScriptBase {

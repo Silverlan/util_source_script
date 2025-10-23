@@ -6,10 +6,10 @@ module;
 #include <string>
 #include <vector>
 #include <memory>
-#include <sharedutils/util_markup_file.hpp>
-#include <fsys/filesystem.h>
 
 export module se_script.scene;
+
+export import pragma.filesystem;
 
 export namespace source_engine::script {
 	struct SceneScriptValue {
