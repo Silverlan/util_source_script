@@ -6,6 +6,7 @@ module;
 #include <array>
 #include <memory>
 #include <sstream>
+#include <algorithm>
 
 module se_script.scene;
 
@@ -76,7 +77,7 @@ util::MarkupFile::ResultCode source_engine::script::read_scene(util::MarkupFile 
 util::MarkupFile::ResultCode source_engine::script::read_scene(std::shared_ptr<VFilePtrInternal> &file, source_engine::script::SceneScriptValue &root)
 {
 	auto str = file->ReadString();
-	DataStream ds {};
+	util::DataStream ds {};
 	ds->WriteString(str);
 	ds->SetOffset(0u);
 	util::MarkupFile mf {ds};
@@ -131,7 +132,7 @@ util::MarkupFile::ResultCode source_engine::script::read_wav_phonemes(std::share
 	auto vdat = std::string(chunkSize + 1u, '\0');
 	wavFile->Read(&vdat[0], chunkSize);
 
-	DataStream ds {};
+	util::DataStream ds {};
 	ds->WriteString(vdat);
 	ds->SetOffset(0u);
 
@@ -198,7 +199,7 @@ int main(int argc,char *argv[])
 	VFilePtr f = FileManager::OpenSystemFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Half-Life 2\\hl2\\scenes\\choreoexamples\\sdk_barney1.vcd","rb");
 
 	auto str = f->ReadString();
-	DataStream ds {};
+	util::DataStream ds {};
 	ds->WriteString(str);
 	ds->SetOffset(0u);
 	source_engine::script::SceneScriptValue sv {};
