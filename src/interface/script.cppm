@@ -3,9 +3,6 @@
 
 module;
 
-#include <string>
-#include <vector>
-#include <memory>
 
 export module se_script.script;
 

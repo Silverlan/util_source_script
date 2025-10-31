@@ -3,9 +3,6 @@
 
 module;
 
-#include <array>
-#include <string>
-#include <memory>
 
 module se_script.script;
 
@@ -137,7 +134,6 @@ static void debug_print(const source_engine::script::ScriptBlock &block,std::str
 	}
 }
 
-#include <iostream>
 int main(int argc,char *argv[])
 {
 	auto f = FileManager::OpenSystemFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Source\\hl2\\scripts\\game_sounds_vehicles.txt","r");

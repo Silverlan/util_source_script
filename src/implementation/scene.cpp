@@ -3,10 +3,6 @@
 
 module;
 
-#include <array>
-#include <memory>
-#include <sstream>
-#include <algorithm>
 
 module se_script.scene;
 
@@ -185,7 +181,6 @@ util::MarkupFile::ResultCode source_engine::script::read_wav_phonemes(std::share
 	return util::MarkupFile::ResultCode::Ok;
 }
 #if 0
-#include <iostream>
 int main(int argc,char *argv[])
 {
 	/*source_engine::script::SoundPhonemeData phonemeData {};
