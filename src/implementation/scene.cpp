@@ -3,7 +3,6 @@
 
 module;
 
-
 module se_script.scene;
 
 namespace source_engine::script {

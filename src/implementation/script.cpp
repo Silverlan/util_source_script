@@ -3,7 +3,6 @@
 
 module;
 
-
 module se_script.script;
 
 static source_engine::script::ResultCode read_until(std::shared_ptr<VFilePtrInternal> &f, const std::string &str, std::string &readString, bool bExclude = false)

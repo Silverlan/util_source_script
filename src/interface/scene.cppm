@@ -3,7 +3,6 @@
 
 module;
 
-
 export module se_script.scene;
 
 export import pragma.filesystem;

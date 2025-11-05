@@ -3,7 +3,6 @@
 
 module;
 
-
 export module se_script.script;
 
 import se_script.enums;

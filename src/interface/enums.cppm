@@ -3,7 +3,6 @@
 
 module;
 
-
 export module se_script.enums;
 
 export import std.compat;
