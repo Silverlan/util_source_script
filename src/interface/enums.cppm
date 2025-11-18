@@ -3,9 +3,9 @@
 
 module;
 
-#include <cinttypes>
-
 export module se_script.enums;
+
+export import std.compat;
 
 export namespace source_engine::script {
 	enum class ResultCode : uint32_t {

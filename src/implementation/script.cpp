@@ -3,11 +3,6 @@
 
 module;
 
-#include <sharedutils/util_markup_file.hpp>
-#include <sharedutils/util.h>
-#include <fsys/filesystem.h>
-#include <array>
-
 module se_script.script;
 
 static source_engine::script::ResultCode read_until(std::shared_ptr<VFilePtrInternal> &f, const std::string &str, std::string &readString, bool bExclude = false)
@@ -138,7 +133,6 @@ static void debug_print(const source_engine::script::ScriptBlock &block,std::str
 	}
 }
 
-#include <iostream>
 int main(int argc,char *argv[])
 {
 	auto f = FileManager::OpenSystemFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Source\\hl2\\scripts\\game_sounds_vehicles.txt","r");

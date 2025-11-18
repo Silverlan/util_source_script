@@ -3,11 +3,6 @@
 
 module;
 
-#include <sharedutils/util_markup_file.hpp>
-#include <sharedutils/util.h>
-#include <fsys/filesystem.h>
-#include <array>
-
 module se_script.scene;
 
 namespace source_engine::script {
@@ -77,7 +72,7 @@ util::MarkupFile::ResultCode source_engine::script::read_scene(util::MarkupFile 
 util::MarkupFile::ResultCode source_engine::script::read_scene(std::shared_ptr<VFilePtrInternal> &file, source_engine::script::SceneScriptValue &root)
 {
 	auto str = file->ReadString();
-	DataStream ds {};
+	util::DataStream ds {};
 	ds->WriteString(str);
 	ds->SetOffset(0u);
 	util::MarkupFile mf {ds};
@@ -132,7 +127,7 @@ util::MarkupFile::ResultCode source_engine::script::read_wav_phonemes(std::share
 	auto vdat = std::string(chunkSize + 1u, '\0');
 	wavFile->Read(&vdat[0], chunkSize);
 
-	DataStream ds {};
+	util::DataStream ds {};
 	ds->WriteString(vdat);
 	ds->SetOffset(0u);
 
@@ -185,7 +180,6 @@ util::MarkupFile::ResultCode source_engine::script::read_wav_phonemes(std::share
 	return util::MarkupFile::ResultCode::Ok;
 }
 #if 0
-#include <iostream>
 int main(int argc,char *argv[])
 {
 	/*source_engine::script::SoundPhonemeData phonemeData {};
@@ -199,7 +193,7 @@ int main(int argc,char *argv[])
 	VFilePtr f = FileManager::OpenSystemFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Half-Life 2\\hl2\\scenes\\choreoexamples\\sdk_barney1.vcd","rb");
 
 	auto str = f->ReadString();
-	DataStream ds {};
+	util::DataStream ds {};
 	ds->WriteString(str);
 	ds->SetOffset(0u);
 	source_engine::script::SceneScriptValue sv {};
