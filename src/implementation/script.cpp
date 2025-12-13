@@ -5,7 +5,7 @@ module;
 
 module se_script.script;
 
-static source_engine::script::ResultCode read_until(std::shared_ptr<VFilePtrInternal> &f, const std::string &str, std::string &readString, bool bExclude = false)
+static source_engine::script::ResultCode read_until(std::shared_ptr<pragma::fs::VFilePtrInternal> &f, const std::string &str, std::string &readString, bool bExclude = false)
 {
 	for(;;) {
 		if(f->Eof())
@@ -29,10 +29,10 @@ static source_engine::script::ResultCode read_until(std::shared_ptr<VFilePtrInte
 	return source_engine::script::ResultCode::Ok;
 }
 
-static source_engine::script::ResultCode read_next_token(std::shared_ptr<VFilePtrInternal> &f, char &token)
+static source_engine::script::ResultCode read_next_token(std::shared_ptr<pragma::fs::VFilePtrInternal> &f, char &token)
 {
 	auto str = std::string {};
-	auto r = read_until(f, ustring::WHITESPACE, str, true);
+	auto r = read_until(f, pragma::string::WHITESPACE, str, true);
 	if(r != source_engine::script::ResultCode::Ok)
 		return r;
 	token = str.back();
@@ -42,10 +42,10 @@ static source_engine::script::ResultCode read_next_token(std::shared_ptr<VFilePt
 	return source_engine::script::ResultCode::Ok;
 }
 
-static source_engine::script::ResultCode read_next_string(std::shared_ptr<VFilePtrInternal> &f, std::string &readStr)
+static source_engine::script::ResultCode read_next_string(std::shared_ptr<pragma::fs::VFilePtrInternal> &f, std::string &readStr)
 {
 	auto &str = readStr;
-	auto r = read_until(f, ustring::WHITESPACE, str, true);
+	auto r = read_until(f, pragma::string::WHITESPACE, str, true);
 	if(r != source_engine::script::ResultCode::Ok)
 		return r;
 	if(str.back() == '\"') {
@@ -57,14 +57,14 @@ static source_engine::script::ResultCode read_next_string(std::shared_ptr<VFileP
 	}
 	else {
 		str.clear();
-		r = read_until(f, ustring::WHITESPACE, str, true);
+		r = read_until(f, pragma::string::WHITESPACE, str, true);
 		if(r != source_engine::script::ResultCode::Ok)
 			return r;
 	}
 	return source_engine::script::ResultCode::Ok;
 }
 
-static source_engine::script::ResultCode read_block(std::shared_ptr<VFilePtrInternal> &f, source_engine::script::ScriptBlock &block, uint32_t blockDepth = 0u)
+static source_engine::script::ResultCode read_block(std::shared_ptr<pragma::fs::VFilePtrInternal> &f, source_engine::script::ScriptBlock &block, uint32_t blockDepth = 0u)
 {
 	auto token = char {};
 	for(;;) {
@@ -106,7 +106,7 @@ static source_engine::script::ResultCode read_block(std::shared_ptr<VFilePtrInte
 	return source_engine::script::ResultCode::Error;
 }
 
-source_engine::script::ResultCode source_engine::script::read_script(std::shared_ptr<VFilePtrInternal> &f, source_engine::script::ScriptBlock &block)
+source_engine::script::ResultCode source_engine::script::read_script(std::shared_ptr<pragma::fs::VFilePtrInternal> &f, ScriptBlock &block)
 {
 	auto r = ResultCode {};
 	while((r = read_block(f, block, 0u)) == ResultCode::EndOfBlock)

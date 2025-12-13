@@ -34,8 +34,8 @@ export namespace source_engine::script {
 		std::vector<WordData> words = {};
 	};
 
-	util::MarkupFile::ResultCode read_wav_phonemes(std::shared_ptr<VFilePtrInternal> &wavFile, SoundPhonemeData &phonemeData);
-	util::MarkupFile::ResultCode read_scene(std::shared_ptr<VFilePtrInternal> &file, SceneScriptValue &root);
+	pragma::util::MarkupFile::ResultCode read_wav_phonemes(std::shared_ptr<pragma::fs::VFilePtrInternal> &wavFile, SoundPhonemeData &phonemeData);
+	pragma::util::MarkupFile::ResultCode read_scene(std::shared_ptr<pragma::fs::VFilePtrInternal> &file, SceneScriptValue &root);
 
 	void debug_print(std::stringstream &ss, SoundPhonemeData &phonemeData);
 	void debug_print(std::stringstream &ss, SceneScriptValue &val, const std::string &t = "");

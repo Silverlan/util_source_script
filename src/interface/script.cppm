@@ -24,5 +24,5 @@ export namespace source_engine::script {
 		virtual bool IsBlock() const override { return true; }
 	};
 
-	ResultCode read_script(std::shared_ptr<VFilePtrInternal> &f, ScriptBlock &root);
+	ResultCode read_script(std::shared_ptr<pragma::fs::VFilePtrInternal> &f, ScriptBlock &root);
 };
